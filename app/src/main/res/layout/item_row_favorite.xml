@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:id="@+id/rv_listMovieFav"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_item_fotoFav"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        tools:src="@android:color/darker_gray" />
+    
+    <LinearLayout
+        android:layout_toEndOf="@+id/img_item_fotoFav"
+        android:layout_toRightOf="@+id/img_item_foto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/tv_item_nameFav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Aladin"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:height="64dp"
+            android:id="@+id/tv_item_remarksFav"
+            tools:text="Aladin adalah film yang mendandung film kekartunanan dimanan aktor utamanya merupakan bukan orang yang beneran atau."/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/favoireIcon"
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_clicked"
+                />
+            <TextView
+                android:id="@+id/textFavorite"
+                android:layout_width="93dp"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/favoireIcon"
+                android:text="Favorite" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Katalog film</string>
+    <string name="list">Daftar</string>
+    <string name="title_activity_bottom_navigation">Navigasi Bawah</string>
+    <string name="movies">Film</string>
+    <string name="tvShow">TV Show</string>
+    <string name="this_activity"> Pengaturan</string>
+    <string name="fragmentMovies">Film</string>
+    <string name="fragmentTvShow">Film Tayang</string>
+    <string name="change_language_settings">Pengaturan Bahasa</string>
+    <string name="genre_movie">Jenis Film</string>
+    <string name="production">Produksi</string>
+    <string name="income">Pendapatan</string>
+    <string name="rating">Rating Film</string>
+    <string name="release">Rilis</string>
+    <string name="overview">Ikhstiar</string>
+    <string name="detail_poster">Detail Poster</string>
+    <string name="titleMovie">Judul</string>
+    <string name="RealeaseDate">Tanggal Rilis</string>
+    <string name="voteCount">Total Vote</string>
+    <string name="favorite"> Juara </string>
+    <string name="delete" > Hapus </string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

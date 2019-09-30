@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C">
+
+<!--    <StackView-->
+<!--        android:id="@+id/sv_widget"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_widget"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:contentDescription="@string/empty_text"-->
+<!--        android:text="@string/empty_text"-->
+<!--        android:textColor="#fff"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold|italic"-->
+<!--        android:visibility="gone" />-->
+
+    <Button
+        android:id="@+id/widget_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="This is widget"
+        />
+
+</RelativeLayout>
