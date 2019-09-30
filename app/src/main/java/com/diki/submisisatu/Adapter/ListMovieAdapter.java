@@ -34,6 +34,9 @@ public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.Movi
     public ListMovieAdapter(Context context, List<Movie> ListMovie) {
         this.context = context;
         this.ListMovie = ListMovie;
+
+
+
     }
 
     @NonNull
@@ -86,7 +89,8 @@ public class ListMovieAdapter extends RecyclerView.Adapter<ListMovieAdapter.Movi
         }
     }
 
-
-
+    public List<Movie> getMovies(){
+        return  getMoviesList();
+    }
 
 }

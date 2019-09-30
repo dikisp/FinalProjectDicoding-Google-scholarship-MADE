@@ -12,7 +12,7 @@
 //import android.util.Log;
 //import android.widget.Toast;
 //
-//import com.diki.submisisatu.Api.RetrofitApi;
+//import com.diki.submisisatu.Api.APIClient;
 //import com.diki.submisisatu.BuildConfig;
 //import com.diki.submisisatu.Model.Movie;
 //import com.diki.submisisatu.Model.MovieResponse;
@@ -117,7 +117,7 @@
 //
 //        Log.d(TAG, "getMatchToday: " + dateFormatter(currentDate));
 //
-//        apiClient = RetrofitApi.getInstance();
+//        apiClient = APIClient.getInstance();
 //        call = apiClient.ge().getNowPlayingMovies(API_KEY, LANGUAGE, currentPage, region);
 //        call.enqueue(new Callback<MovieResponse>() {
 //            @Override

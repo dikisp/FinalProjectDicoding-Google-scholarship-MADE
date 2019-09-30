@@ -11,22 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import com.diki.submisisatu.Adapter.ListMovieAdapter;
+import com.diki.submisisatu.Api.APIClient;
 import com.diki.submisisatu.Api.MovieApi;
-import com.diki.submisisatu.Api.RetrofitApi;
 import com.diki.submisisatu.Api.Scraper;
 import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.Model.Movie;
-import com.diki.submisisatu.Model.TV;
+import com.diki.submisisatu.Model.Response;
 import com.diki.submisisatu.R;
 import com.diki.submisisatu.repo.FavoriteMovieRepository;
-import com.diki.submisisatu.repo.dao.FavoriteMovieDB;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -45,6 +45,9 @@ public class FragmentMovies extends Fragment {
     private static final String STATE_RESULT = "state_result";
     private ProgressBar progressBar;
     private FavoriteMovieRepository db;
+
+    private Button btnSearch;
+    private EditText edtSearch, src;
 
 
 
@@ -80,6 +83,19 @@ public class FragmentMovies extends Fragment {
         rvMainMovie.setAdapter(listMovieAdapter);
 //        setView(false);
 
+//        edtSearch.clearFocus();
+//
+        edtSearch = view.findViewById(R.id.edtSearchText);
+        btnSearch = view.findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String queryData = edtSearch.getText().toString();
+                Log.i("querySearch", queryData);
+                searchData(queryData);
+            }
+        });
+
     }
 
 
@@ -90,7 +106,7 @@ public class FragmentMovies extends Fragment {
 
 
     private  void fetchDataMovie(){
-        MovieApi movieApi = RetrofitApi.getClient().create(MovieApi.class);
+        MovieApi movieApi = APIClient.getClient().create(MovieApi.class);
         movieApi.findNowPlayingMovies(API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -124,9 +140,6 @@ public class FragmentMovies extends Fragment {
         progressBar.setVisibility(View.GONE);
     }
 
-
-
-
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -134,17 +147,39 @@ public class FragmentMovies extends Fragment {
         savedInstanceState.putParcelableArrayList(STATE_RESULT, movieList);
     }
 
+    //searchMovie
 
+    void searchData(String queryData) {
+        progressBar.setVisibility(View.VISIBLE);
+        MovieApi movieService = APIClient.getClient()
+                .create(MovieApi.class);
+        movieService.searchMovie(BuildConfig.APIKEY, queryData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<Movie>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
 
+                    @Override
+                    public void onSuccess(Response<Movie> movieResponse) {
+                        processData(movieResponse.getResults());
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
 
+                    }
+                });
+//        loading.setVisibility(View.GONE);
+    }
 
-
-
-
-
-
-
+    void processData(List<Movie> data) {
+        movieList.clear();
+        movieList.addAll(data);
+        progressBar.setVisibility(View.GONE);
+        listMovieAdapter.notifyDataSetChanged();
+    }
 
 }

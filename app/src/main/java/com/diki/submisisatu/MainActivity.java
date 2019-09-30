@@ -9,20 +9,41 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.diki.submisisatu.Api.APIClient;
+import com.diki.submisisatu.Api.MovieApi;
 import com.diki.submisisatu.Fragment.FragmentFavorite;
 import com.diki.submisisatu.Fragment.FragmentMovies;
 import com.diki.submisisatu.Fragment.FragmentTvShow;
+import com.diki.submisisatu.Model.Movie;
+import com.diki.submisisatu.Model.Response;
+
+import java.util.List;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity  {
     private TextView mTextMessage;
     private static final String STATE_RESULT = "state_result";
     private int position;
+    private Button btnSearch;
     private ViewPager viewPager;
     RecyclerView recyclerView;
+    private EditText edtSearch, src;
+    private ProgressBar loading;
+
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -72,7 +93,14 @@ public class MainActivity extends AppCompatActivity  {
             navView.setSelectedItemId(R.id.navigation_movies);
         }
 
+
+
     }
+
+
+
+
+
 
     //change language
 

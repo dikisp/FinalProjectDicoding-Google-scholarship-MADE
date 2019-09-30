@@ -7,25 +7,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.diki.submisisatu.Adapter.ListMovieAdapter;
 import com.diki.submisisatu.Adapter.TvShowAdapter;
+import com.diki.submisisatu.Api.APIClient;
 import com.diki.submisisatu.Api.MovieApi;
-import com.diki.submisisatu.Api.RetrofitApi;
 import com.diki.submisisatu.Api.Scraper;
 import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.Model.Movie;
+import com.diki.submisisatu.Model.Response;
 import com.diki.submisisatu.Model.TV;
 import com.diki.submisisatu.R;
 import com.diki.submisisatu.repo.FavoriteMovieRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -37,15 +40,18 @@ import io.reactivex.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class FragmentTvShow extends Fragment {
+    private static final String API_KEY = BuildConfig.APIKEY;
+    private static final String STATE_RESULT = "state_result";
     RecyclerView rvCategory;
     private TvShowAdapter listMovieAdapter;
     private ArrayList<TV> list;
-    private static final String API_KEY = BuildConfig.APIKEY;
     private ArrayList<TV> movieList = new ArrayList<>();
     private ProgressBar loading;
-    private static final String STATE_RESULT = "state_result";
     private ProgressBar progressBar;
     private FavoriteMovieRepository db;
+
+    private Button btnSearch;
+    private EditText edtSearch, src;
 
     public FragmentTvShow() {
         // Required empty public constructor
@@ -70,21 +76,29 @@ public class FragmentTvShow extends Fragment {
         }
 
 
-        for (int i=0;i<movieList.size();i++){
+        for (int i = 0; i < movieList.size(); i++) {
             movieList.get(i).setTvShow(true);
         }
-//        listMovieAdapter = new ListMovieAdapter(getContext(), movies);
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        rvMainMovie.setLayoutManager(layoutManager);
-//        rvMainMovie.setAdapter(listMovieAdapter);
 
-        listMovieAdapter = new TvShowAdapter(getContext(),movieList);
+
+        listMovieAdapter = new TvShowAdapter(getContext(), movieList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvMainMovie.setLayoutManager(layoutManager);
         rvMainMovie.setAdapter(listMovieAdapter);
 
 
 //        setView(false);
+
+        edtSearch = view.findViewById(R.id.edtSearchText);
+        btnSearch = view.findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String queryData = edtSearch.getText().toString();
+                Log.i("querySearch", queryData);
+                searchData(queryData);
+            }
+        });
 
     }
 
@@ -96,7 +110,7 @@ public class FragmentTvShow extends Fragment {
 
 
     private void fetchDataMovie() {
-        MovieApi movieApi = RetrofitApi.getClient().create(MovieApi.class);
+        MovieApi movieApi = APIClient.getClient().create(MovieApi.class);
         movieApi.findOnTheAirTv(API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -121,9 +135,9 @@ public class FragmentTvShow extends Fragment {
     private void initData(List<TV> TV) {
         movieList.clear();
         movieList.addAll(TV);
-//        for (int i=0;i<movieList.size();i++){
-//            movieList.get(i).setTvShow(true);
-//        }
+        for (int i = 0; i < movieList.size(); i++) {
+            movieList.get(i).setTvShow(true);
+        }
 
         listMovieAdapter.notifyDataSetChanged();
         progressBar.setVisibility(View.GONE);
@@ -134,6 +148,44 @@ public class FragmentTvShow extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putParcelableArrayList(STATE_RESULT, movieList);
+    }
+
+    //searchMovie
+
+    void searchData(String queryData) {
+        progressBar.setVisibility(View.VISIBLE);
+        MovieApi movieService = APIClient.getClient()
+                .create(MovieApi.class);
+        movieService.searchTvShow(BuildConfig.APIKEY, queryData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<TV>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Response<TV> tvResponse) {
+                        initData(tvResponse.getResults());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+        progressBar.setVisibility(View.GONE);
+
+
+    }
+
+
+    void processData(List<TV> data) {
+        movieList.clear();
+        movieList.addAll(data);
+        progressBar.setVisibility(View.GONE);
+        listMovieAdapter.notifyDataSetChanged();
     }
 
 

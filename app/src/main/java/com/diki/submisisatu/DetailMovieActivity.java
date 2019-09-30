@@ -65,10 +65,6 @@ public class DetailMovieActivity extends AppCompatActivity {
 
         db = FavoriteMovieRepository.getInstance(this);
 
-
-//        setView(false);
-        //
-
         Intent intent = getIntent();
         final Movie data = intent.getParcelableExtra(EXTRA_MOVIE);
         Log.d("cek", data.toString());

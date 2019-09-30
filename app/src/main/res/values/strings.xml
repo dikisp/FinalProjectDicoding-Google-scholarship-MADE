@@ -33,4 +33,7 @@
     <string name="key_release_reminder">Release</string>
     <string name="key_setting_language">Setting Languge</string>
     <string name="toast_failed">Gagal</string>
+    <string name="progress_loading">Loading</string>
+    <string name="toast_not_found">Not Found</string>
+    <string name="action_search">Search Movie</string>
 </resources>

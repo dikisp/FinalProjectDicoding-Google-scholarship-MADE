@@ -22,4 +22,18 @@
     <string name="favorite" > Favorite </string>
     <string name="delete" > Delete </string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_favourite">add to favorite</string>
+    <string name="remove_favourite">Dismiss</string>
+    <string name="null_favorite">Not available Favorite Movie</string>
+    <string name="repeat_notif">Try Notification</string>
+    <string name="empty_text">Empty Text</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="key_daily_reminder">Daily Remainder</string>
+    <string name="key_release_reminder">Release</string>
+    <string name="key_setting_language">Setting Languge</string>
+    <string name="toast_failed">Gagal</string>
+    <string name="progress_loading">Loading</string>
+    <string name="toast_not_found">Not Found</string>
+
 </resources>
