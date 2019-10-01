@@ -14,14 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.diki.submisisatu.Adapter.TvShowAdapter;
 import com.diki.submisisatu.Api.APIClient;
 import com.diki.submisisatu.Api.MovieApi;
 import com.diki.submisisatu.Api.Scraper;
 import com.diki.submisisatu.BuildConfig;
-import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.Model.Response;
 import com.diki.submisisatu.Model.TV;
 import com.diki.submisisatu.R;
@@ -176,7 +174,6 @@ public class FragmentTvShow extends Fragment {
                     }
                 });
         progressBar.setVisibility(View.GONE);
-
 
     }
 

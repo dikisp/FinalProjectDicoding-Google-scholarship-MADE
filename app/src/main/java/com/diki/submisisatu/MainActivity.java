@@ -131,4 +131,9 @@ public class MainActivity extends AppCompatActivity  {
         position = savedInstanceState.getInt(STATE_RESULT);
     }
 
+
+
+
+    //show list card widget
+
 }

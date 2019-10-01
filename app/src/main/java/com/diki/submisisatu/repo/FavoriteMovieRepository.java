@@ -2,17 +2,23 @@ package com.diki.submisisatu.repo;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
+import com.diki.submisisatu.Database.DatabaseContract;
+import com.diki.submisisatu.Database.DatabaseHelper;
+import com.diki.submisisatu.Model.FavoriteMovie;
 import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.repo.dao.FavoriteMovieDB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteMovieRepository {
     private String DB_NAME = "db_profileApp";
     private MovieDatabase database;
+    DatabaseHelper databaseHelper;
     private Context context;
 
     private FavoriteMovieRepository(Context context) {
@@ -79,6 +85,46 @@ public class FavoriteMovieRepository {
         }
 
         return status;
+    }
+
+
+    public void open() {
+        database = databaseHelper.getWritableDatabase();
+    }
+
+    public void close() {
+        databaseHelper.close();
+
+        if (database.isOpen()) database.close();
+    }
+
+    public ArrayList<Movie> findAll() {
+        ArrayList<Movie> arrayList = new ArrayList<>();
+        Cursor cursor = database.query(DATABASE_TABLE
+                , null
+                , null
+                , null
+                , null
+                , null
+                , null
+                , null, DatabaseContract.PokemonCardsColumns._ID + " DESC"
+                , null);
+        cursor.moveToFirst();
+        Movie pokemonCard;
+        if (cursor.getCount() > 0) {
+            do {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.PokemonCardsColumns.NAME));
+                String image = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.PokemonCardsColumns.IMAGE));
+                String rarity = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.PokemonCardsColumns.RARITY));
+                String series = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.PokemonCardsColumns.SERIES));
+
+                pokemonCard = new Movie(name, image, rarity, series);
+                arrayList.add(pokemonCard);
+                cursor.moveToNext();
+            } while (!cursor.isAfterLast());
+        }
+        cursor.close();
+        return arrayList;
     }
 
 

@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".DetailTVActivity" />
+
         <activity android:name=".Item.MenuActivity" />
         <activity android:name=".DetailMovieActivity" />
         <activity android:name=".MainActivity">
@@ -20,16 +21,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".widget.my_widget">
+        <receiver android:name=".widget.MyStackWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/my_widget_info" />
+                android:resource="@xml/my_stack_widget_info" />
         </receiver>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
