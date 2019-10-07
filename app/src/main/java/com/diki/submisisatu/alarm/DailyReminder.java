@@ -10,28 +10,24 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-
 import com.diki.submisisatu.R;
-
-import timber.log.Timber;
 
 public class DailyReminder extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 1;
-    public static String CHANNEL_ID = "Daily Reminder";
-    public static CharSequence CHANNEL_NAME = "Pokemon Channel";
+    public static String CHANNEL_ID = "Film";
+    public static CharSequence CHANNEL_NAME = "Daily Reminder";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Timber.i("Masuk ke dalam daily reminder");
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher))
-                .setContentTitle("Ini adalah Daily Reminder")
-                .setContentText("Isi dari daily reminder, silakan bahagia :)")
-                .setSubText("Jangan lupa bahagia")
+                .setSmallIcon(R.drawable.ic_notifications)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notifications))
+                .setContentTitle(context.getString(R.string.content_daily_reminder_title))
+                .setContentText(context.getString(R.string.content_daily_remider_text))
+                .setSubText(context.getString(R.string.content_daily_remider_subtext))
                 .setAutoCancel(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -36,4 +36,15 @@
     <string name="progress_loading">Loading</string>
     <string name="toast_not_found">Not Found</string>
     <string name="action_search">Search Movie</string>
+
+    <string name="preference_daily_title">Daily Reminder</string>
+    <string name="preference_daily_summary">Reminder for return to the app</string>
+    <string name="preference_relase_summary">Reminder for showing movie that release today</string>
+    <string name="preference_release_title">Release Reminder</string>
+    <string name="key_daily">daily</string>
+    <string name="key_release">release</string>
+    <string name="content_daily_reminder_title">Yuk Buka Movie List</string>
+    <string name="content_daily_remider_text">Cek film baru yuk, buat bahan nonton sama gebetan.</string>
+    <string name="content_daily_remider_subtext">Movie List</string>
+    <string name="action_notifikasi">Notifikasi</string>
 </resources>

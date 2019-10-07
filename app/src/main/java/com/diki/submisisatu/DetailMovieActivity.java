@@ -1,20 +1,16 @@
 package com.diki.submisisatu;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.diki.submisisatu.Adapter.ListMovieAdapter;
 import com.diki.submisisatu.Model.FavoriteMovie;
 import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.repo.FavoriteMovieRepository;
@@ -28,19 +24,16 @@ import java.util.Objects;
 
 
 public class DetailMovieActivity extends AppCompatActivity {
-    private TextView title, tvRelease, deskripsi, rating, voteCount;
-    private static final String posterPath = BuildConfig.POSTER_PATH;
-    private ImageView circleImageView;
     public static final String EXTRA_MOVIE = "extra_movie";
-    private String mPosition;
-    private MaterialFavoriteButton favoriteButton;
-
+    private static final String posterPath = BuildConfig.POSTER_PATH;
     Movie movie;
-
     String posterMovie, movieName, overview, ratingMovie, dateOfRelease;
     int movie_id;
     List<FavoriteMovie> entries = new ArrayList<>();
-
+    private TextView title, tvRelease, deskripsi, rating, voteCount;
+    private ImageView circleImageView;
+    private String mPosition;
+    private MaterialFavoriteButton favoriteButton;
     private FavoriteMovieRepository db;
 
     private ProgressBar progressBar;
@@ -95,8 +88,7 @@ public class DetailMovieActivity extends AppCompatActivity {
 
             //TODO
 
-        }
-        else {
+        } else {
             progressBar.setVisibility(View.GONE);
         }
 

@@ -1,108 +1,92 @@
 package com.diki.submisisatu.alarm;
 
-import android.app.AlarmManager;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.Toast;
 
+import com.diki.submisisatu.Api.APIClient;
+import com.diki.submisisatu.Api.MovieApi;
+import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.Model.Movie;
+import com.diki.submisisatu.Model.MovieResponse;
 import com.diki.submisisatu.R;
 
-import java.util.Calendar;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-import static android.content.ContentValues.TAG;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class ReleaseTodayReminder extends BroadcastReceiver {
+    public static final int NOTIFICATION_ID = 2;
+    public static String CHANNEL_ID = "Film";
+    public static CharSequence CHANNEL_NAME = "Hari Ini";
 
-    private static final int NOTIF_ID_REPEATING = 101;
-    private static int notifId;
+    private MovieApi mMovieApi;
 
-    public ReleaseTodayReminder() {
-    }
-
+    @SuppressLint("CheckResult")
     @Override
-    public void onReceive(Context context, Intent intent) {
-
-        notifId = intent.getIntExtra("id", 0);
-        String title = intent.getStringExtra("movieTitle");
-
-        showAlarmNotification(context, title, notifId);
+    public void onReceive(final Context context, Intent intent) {
+        mMovieApi = APIClient.getInstance().getApi();
+        mMovieApi.findUpcomingMovie(BuildConfig.APIKEY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<MovieResponse>() {
+                    @Override
+                    public void accept(MovieResponse movieResponse) {
+                        onSuccess(context, movieResponse);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
-    private void showAlarmNotification(Context context, String title, int notifId) {
-
-        NotificationManager notificationManagerCompat = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        Log.d(TAG, "showAlarmNotification: " + notifId);
-
-        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText("Today " + title + " release")
-                .setAutoCancel(true)
-                .setColor(ContextCompat.getColor(context, android.R.color.transparent))
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setSound(alarmSound);
-
-        if (notificationManagerCompat != null) {
-            notificationManagerCompat.notify(notifId, builder.build());
-        }
-    }
-
-
-    public void setRepeatingAlarm(Context context, List<Movie> movieResults) {
-
-        Log.d(TAG, "setRepeatingAlarm: " + movieResults.size());
-
-        int notifDelay = 0;
-
-        for (int i = 0; i < movieResults.size(); i++) {
-            cancelAlarm(context);
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            Intent intent = new Intent(context, ReleaseTodayReminder.class);
-            intent.putExtra("movieTitle", movieResults.get(i).getTitle());
-            intent.putExtra("id", notifId);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 8);
-            calendar.set(Calendar.MINUTE, 5);
-
-            if (alarmManager != null) {
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + notifDelay, AlarmManager.INTERVAL_DAY, pendingIntent);
+    private void onSuccess(Context context, MovieResponse movieResponse) {
+        @SuppressLint("SimpleDateFormat")
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        for (Movie movie : movieResponse.getResults()) {
+            if (movie.getReleaseDate().equals(today)) {
+                showNotification(context, movie);
             }
-
-            notifId ++;
-            notifDelay += 1000;
-        }
-
-        Toast.makeText(context, "Release reminder set up", Toast.LENGTH_SHORT).show();
-
-    }
-
-    public void cancelAlarm(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager != null) {
-            alarmManager.cancel(getPendingIntent(context));
         }
     }
 
-    private static PendingIntent getPendingIntent(Context context) {
+    private void showNotification(Context context, Movie movie) {
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent intent = new Intent(context, DailyAlarmReceiver.class);
-        return PendingIntent.getBroadcast(context, 101, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        NotificationCompat.Builder mBuilder;
+        mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notifications)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notifications))
+                .setContentTitle(movie.getTitle())
+                .setContentText(movie.getOverview())
+                .setSubText(movie.getReleaseDate())
+                .setAutoCancel(true);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            mBuilder.setChannelId(CHANNEL_ID);
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        Notification notification = mBuilder.build();
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(NOTIFICATION_ID, notification);
+        }
     }
 }

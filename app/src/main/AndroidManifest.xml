@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".settings.SettingActivity" />
+
         <receiver android:name=".widget.MyStackWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -30,7 +32,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/my_stack_widget_info" />
         </receiver>
+        <receiver android:name=".alarm.ReleaseTodayReminder" />
+        <receiver android:name=".alarm.DailyReminder" />
 
+        <service
+            android:name=".widget.MyWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

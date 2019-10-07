@@ -32,4 +32,7 @@ public interface MovieApi {
 
     @GET("search/movie")
     Call<MovieResponse> getSearchMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("query") String querySearch);
+
+    @GET("movie/upcoming")
+    Single<MovieResponse> findUpcomingMovie(@Query("api_key") String apiKey);
 }

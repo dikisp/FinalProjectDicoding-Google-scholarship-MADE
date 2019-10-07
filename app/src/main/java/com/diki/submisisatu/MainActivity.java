@@ -25,6 +25,7 @@ import com.diki.submisisatu.Fragment.FragmentMovies;
 import com.diki.submisisatu.Fragment.FragmentTvShow;
 import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.Model.Response;
+import com.diki.submisisatu.settings.SettingActivity;
 
 import java.util.List;
 
@@ -115,6 +116,9 @@ public class MainActivity extends AppCompatActivity  {
         if (item.getItemId() == R.id.action_change_setting){
             Intent mIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
             startActivity(mIntent);
+        } else if (item.getItemId() == R.id.action_change_preference) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

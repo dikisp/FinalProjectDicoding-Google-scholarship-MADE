@@ -8,22 +8,22 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.bumptech.glide.Glide;
-import com.diki.submisisatu.Adapter.ListMovieAdapter;
-import com.diki.submisisatu.Model.Movie;
+import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.R;
 import com.diki.submisisatu.repo.FavoriteMovieRepository;
+import com.diki.submisisatu.repo.dao.FavoriteMovieDB;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class MyWidgetViewFactory implements RemoteViewsService.RemoteViewsFactory {
-    private List<Movie> pokemonCards = new ArrayList<>();
+    private List<FavoriteMovieDB> movies = new ArrayList<>();
     private FavoriteMovieRepository cardHelper;
     private Context context;
 
     public MyWidgetViewFactory(Context context) {
         this.context = context;
-        cardHelper = FavoriteMovieRepository.getInstance(context).getInstance(context);
+        cardHelper = FavoriteMovieRepository.getInstance(context);
     }
 
     @Override
@@ -34,9 +34,7 @@ class MyWidgetViewFactory implements RemoteViewsService.RemoteViewsFactory {
     @SuppressLint("CheckResult")
     @Override
     public void onDataSetChanged() {
-        cardHelper.open();
-        pokemonCards = cardHelper.findAll();
-        cardHelper.close();
+        movies = cardHelper.findAll();
     }
 
     @Override
@@ -46,16 +44,18 @@ class MyWidgetViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        return pokemonCards.size();
+        return movies.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_item);
+        System.out.println("GAMBAR ke " + i);
+        System.out.println(BuildConfig.POSTER_PATH + movies.get(i).getPosterPath());
         try {
             Bitmap poster = Glide.with(context)
                     .asBitmap()
-                    .load(pokemonCards.get(i).getBackdropPath())
+                    .load(BuildConfig.POSTER_PATH + movies.get(i).getPosterPath())
                     .submit()
                     .get();
             remoteViews.setImageViewBitmap(R.id.iv_widget_item, poster);
