@@ -2,8 +2,11 @@ package com.diki.submisisatu.repo;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.widget.CursorAdapter;
 
+import com.diki.submisisatu.Database.DatabaseContract;
 import com.diki.submisisatu.Database.DatabaseHelper;
 import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.repo.dao.FavoriteMovieDB;
@@ -93,5 +96,7 @@ public class FavoriteMovieRepository {
         return dao.getFavoriteMovies();
     }
 
-
+    public Cursor queryProvider() {
+        return database.query("SELECT * FROM favoritemovies", null);
+    }
 }

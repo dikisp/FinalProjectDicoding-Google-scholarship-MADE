@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Adapter.ListMovieAdapter">
 
-
-
     <ProgressBar
         android:id="@+id/Loading"
         android:layout_width="50dp"
