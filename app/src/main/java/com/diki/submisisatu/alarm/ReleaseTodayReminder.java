@@ -16,6 +16,7 @@ import com.diki.submisisatu.Api.MovieApi;
 import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.Model.Movie;
 import com.diki.submisisatu.Model.MovieResponse;
+import com.diki.submisisatu.Model.Response;
 import com.diki.submisisatu.R;
 
 import java.text.SimpleDateFormat;
@@ -40,20 +41,15 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
         mMovieApi.findUpcomingMovie(BuildConfig.APIKEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<MovieResponse>() {
+                .subscribe(new Consumer<Response<Movie>>() {
                     @Override
-                    public void accept(MovieResponse movieResponse) {
+                    public void accept(Response<Movie> movieResponse) throws Exception {
                         onSuccess(context, movieResponse);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
                     }
                 });
     }
 
-    private void onSuccess(Context context, MovieResponse movieResponse) {
+    private void onSuccess(Context context, Response<Movie> movieResponse) {
         @SuppressLint("SimpleDateFormat")
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         for (Movie movie : movieResponse.getResults()) {
