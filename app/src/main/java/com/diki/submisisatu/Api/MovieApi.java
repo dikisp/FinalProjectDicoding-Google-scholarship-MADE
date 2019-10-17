@@ -31,5 +31,5 @@ public interface MovieApi {
     );
 
     @GET("movie/upcoming")
-    Single<Response<Movie>> findUpcomingMovie(@Query("api_key") String apiKey);
+    Single<Scraper<Movie>> findUpcomingMovie(@Query("api_key") String apiKey);
 }

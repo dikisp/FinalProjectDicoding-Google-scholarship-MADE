@@ -13,10 +13,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.diki.submisisatu.Api.APIClient;
 import com.diki.submisisatu.Api.MovieApi;
+import com.diki.submisisatu.Api.Scraper;
 import com.diki.submisisatu.BuildConfig;
 import com.diki.submisisatu.Model.Movie;
-import com.diki.submisisatu.Model.MovieResponse;
-import com.diki.submisisatu.Model.Response;
 import com.diki.submisisatu.R;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +30,7 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 2;
     public static String CHANNEL_ID = "Film";
     public static CharSequence CHANNEL_NAME = "Hari Ini";
+    private static final String API_KEY = BuildConfig.APIKEY;
 
     private MovieApi mMovieApi;
 
@@ -41,18 +41,18 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
         mMovieApi.findUpcomingMovie(BuildConfig.APIKEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Response<Movie>>() {
+                .subscribe(new Consumer<Scraper<Movie>>() {
                     @Override
-                    public void accept(Response<Movie> movieResponse) throws Exception {
-                        onSuccess(context, movieResponse);
+                    public void accept(Scraper<Movie> movieScraper) throws Exception {
+                        onSuccess(context, movieScraper);
                     }
                 });
     }
 
-    private void onSuccess(Context context, Response<Movie> movieResponse) {
+    private void onSuccess(Context context, Scraper<Movie> movieScraper) {
         @SuppressLint("SimpleDateFormat")
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        for (Movie movie : movieResponse.getResults()) {
+        for (Movie movie : movieScraper.getResultMovies()) {
             if (movie.getReleaseDate().equals(today)) {
                 showNotification(context, movie);
             }
