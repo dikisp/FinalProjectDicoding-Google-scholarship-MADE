@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.diki.submisisatu.Api.APIClient;
 import com.diki.submisisatu.Api.MovieApi;
@@ -37,7 +38,7 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
     @SuppressLint("CheckResult")
     @Override
     public void onReceive(final Context context, Intent intent) {
-        mMovieApi = APIClient.getInstance().getApi();
+        mMovieApi = APIClient.getClient().create(MovieApi.class);
         mMovieApi.findUpcomingMovie(BuildConfig.APIKEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -52,6 +53,7 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
     private void onSuccess(Context context, Scraper<Movie> movieScraper) {
         @SuppressLint("SimpleDateFormat")
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        Log.i("ReleaseTodayReminder", String.format("%d", movieScraper.getResultMovies().size()));
         for (Movie movie : movieScraper.getResultMovies()) {
             if (movie.getReleaseDate().equals(today)) {
                 showNotification(context, movie);
