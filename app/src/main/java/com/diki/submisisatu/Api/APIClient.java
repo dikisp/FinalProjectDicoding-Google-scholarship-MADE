@@ -9,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class APIClient {
     private  static  final  String WEBAPI = BuildConfig.WEBAPI;
     private static Retrofit retrofit = null;
-    private MovieApi api;
     private static APIClient instance = null;
 
     public static APIClient getInstance() {
@@ -28,10 +27,6 @@ public class APIClient {
                     .build();
         }
         return retrofit;
-    }
-
-    public MovieApi getApi() {
-        return api;
     }
 
 }

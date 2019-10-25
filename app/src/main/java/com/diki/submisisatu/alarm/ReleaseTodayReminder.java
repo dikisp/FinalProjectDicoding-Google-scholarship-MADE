@@ -53,15 +53,18 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
     private void onSuccess(Context context, Scraper<Movie> movieScraper) {
         @SuppressLint("SimpleDateFormat")
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        Log.i("ReleaseTodayReminder", String.format("%d", movieScraper.getResultMovies().size()));
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         for (Movie movie : movieScraper.getResultMovies()) {
             if (movie.getReleaseDate().equals(today)) {
-                showNotification(context, movie);
+                inboxStyle.addLine(movie.getTitle());
             }
         }
+        inboxStyle.setSummaryText("Dan masih banyak lagi...");
+        showNotification(context, inboxStyle, today);
     }
 
-    private void showNotification(Context context, Movie movie) {
+    private void showNotification(Context context, NotificationCompat.InboxStyle inboxStyle,
+                                  String today) {
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -69,9 +72,9 @@ public class ReleaseTodayReminder extends BroadcastReceiver {
         mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notifications)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notifications))
-                .setContentTitle(movie.getTitle())
-                .setContentText(movie.getOverview())
-                .setSubText(movie.getReleaseDate())
+                .setContentTitle("Film yang rilis hari ini")
+                .setContentText(today)
+                .setStyle(inboxStyle)
                 .setAutoCancel(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
